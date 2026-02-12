@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kéo thả PC & Mobile</title>
+
+<style>
+h2 { color: #333; margin-bottom: 5px; }
+p { color: #666; margin-bottom: 20px; }
+
+.container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.source-vung {
+    width: 150px;
+    min-height: 250px;
+    background: #fff;
+    border: 2px dashed #ccc;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.drop-vung {
+    width: 250px;
+    min-height: 250px;
+    background: #e1f5fe;
+    border: 2px solid #03a9f4;
+    padding: 15px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.drop-vung.hover {
+    background: #b3e5fc;
+    transform: scale(1.02);
+    border-style: dashed;
+}
+
+.item {
+    padding: 15px;
+    margin-bottom: 12px;
+    background: #4caf50;
+    color: white;
+    cursor: move;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    user-select: none;
+}
+
+.item:active { opacity: 0.7; }
+
+.hint {
+    text-align: center;
+    color: #0277bd;
+    pointer-events: none;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Kéo thả PC & Di động</h2>
+<p>Nhấn giữ để bắt đầu kéo</p>
+
+<div class="container">
+    <div class="source-vung">
+        <div class="item" draggable="true" id="item1">Mục 1</div>
+        <div class="item" draggable="true" id="item2">Mục 2</div>
+        <div class="item" draggable="true" id="item3">Mục 3</div>
+    </div>
+
+    <div class="drop-vung" id="dropzone">
+        <div class="hint">Thả vào đây</div>
+    </div>
+</div>
+
+<script>
+const items = document.querySelectorAll('.item');
+const dropzone = document.getElementById('dropzone');
+
+items.forEach(item => {
+    item.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', e.target.id);
+        e.target.style.opacity = '0.5';
+    });
+
+    item.addEventListener('dragend', (e) => {
+        e.target.style.opacity = '1';
+    });
+});
+
+dropzone.addEventListener('dragover', (e) => {
+    e.preventDefault(); 
+    dropzone.classList.add('hover');
+});
+
+dropzone.addEventListener('dragleave', () => {
+    dropzone.classList.remove('hover');
+});
+
+dropzone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('hover');
+    
+    const id = e.dataTransfer.getData('text');
+    const draggableElement = document.getElementById(id);
+    
+    if (draggableElement) {
+        const hint = dropzone.querySelector('.hint');
+        if (hint) hint.style.display = 'none';
+        dropzone.appendChild(draggableElement);
+    }
+});
+</script>
+
+</body>
+</html>
